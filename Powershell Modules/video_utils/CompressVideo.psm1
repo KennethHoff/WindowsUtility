@@ -22,7 +22,9 @@ Function CompressVideo_Internal {
         $CalledExternally
     )
 
-    $ReplacedInputFilePathString = $InputFilePath.Replace(".\", "").Replace(".mp4", "")
+
+    $ReplacedInputFilePathString = $InputFilePath.Replace(".\", "").Replace("\","").Replace(".mp4", "")
+
     $OutputFileName = "$ReplacedInputFilePathString$SuffixForCompressedVideos"
 
     $OutputFileName = $OutputFileName.Replace("$FolderNameForTemporaryVideos\", "");
@@ -35,6 +37,7 @@ Function CompressVideo_Internal {
     else {
         $OutputFilePath = "$FolderNameForTemporaryVideos\$OutputFileName"
     }
+    write-host "[CompressVideo]: OutputFilePath written"
 
     if ($Scale)
     {

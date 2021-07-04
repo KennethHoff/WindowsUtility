@@ -24,7 +24,7 @@ Function SplitVideo_Internal
     )
 
     $replacedTimespanString = $Timespan.Replace(":", "-");
-    $replacedFilePathString = $FilePath.Replace(".\", "").Replace(".mp4", "")
+    $replacedFilePathString = $FilePath.Replace(".\", "").Replace("\","").Replace(".mp4", "")
 
     $OutputFileName = $replacedFilePathString + "_" + $replacedTimespanString
 
@@ -40,11 +40,13 @@ Function SplitVideo_Internal
     {
         $outputFilePath = "$FolderNameForTemporaryVideos\$OutputFileName"
 
-        #        write-host """Split Video"" called Internally"
+#        write-host """Split Video"" called Internally"
     }
     mp4box -splitx $Timespan `"$FilePath`" -out $outputFilePath$fileExtension
 
-    return $outputFileName + $fileExtension
+    $returnValue = "$outputFilePath$fileExtension"
+
+    return "$returnValue"
 }
 
 Export-ModuleMember -Function SplitVideo
