@@ -63,8 +63,7 @@ Function SplitAndCompressVideo {
 
     #    6.Delete the 'Temporary' folder
     write-host "step-6"
-
-#    DeleteTemporaryFolder
+    DeleteTemporaryFolder
 }
 
 Export-ModuleMember -Function SplitAndCompressVideo
