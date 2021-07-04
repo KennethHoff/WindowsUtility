@@ -22,8 +22,10 @@ Function CompressVideo_Internal {
         $CalledExternally
     )
 
+    write-host "[CompressVideo]: Input File Path: $InputFilePath"
 
-    $ReplacedInputFilePathString = $InputFilePath.Replace(".\", "").Replace("\","").Replace(".mp4", "")
+
+    $ReplacedInputFilePathString = $InputFilePath.Replace(".\", "").Replace(".mp4", "")
 
     $OutputFileName = "$ReplacedInputFilePathString$SuffixForCompressedVideos"
 
