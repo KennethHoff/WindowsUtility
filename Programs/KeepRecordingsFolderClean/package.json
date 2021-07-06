@@ -1,0 +1,24 @@
+{
+	"name": "keep-recordings-folder-clean",
+	"version": "1.0.0",
+	"description": "Watches a folder and tries to keep it organized",
+	"main": "src/index.js",
+	"repository": "https://github.com/KennethHoff/WindowsUtility",
+	"author": "Kenneth Hoff",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"start": "node src/index.js",
+		"electron": "electron ."
+	},
+	"dependencies": {
+		"chokidar": "^3.5.2",
+		"eslint": "^7.30.0",
+		"fs-extra": "^10.0.0",
+		"prettier": "^2.3.2"
+	},
+	"devDependencies": {
+		"@types/fs-extra": "^9.0.11",
+		"@types/node": "^16.0.0"
+	}
+}
