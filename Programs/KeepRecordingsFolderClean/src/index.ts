@@ -12,8 +12,8 @@ const replacedBaseDir = baseDir.replace("\\", "/");
 
 const watcher = chokidar.watch(replacedBaseDir, {
 	depth: 0,
-	persistent: true,
-	// persistent: false,
+	// persistent: true,
+	persistent: false,
 	// ignoreInitial: true,
 });
 
