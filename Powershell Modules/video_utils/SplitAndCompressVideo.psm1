@@ -47,7 +47,9 @@ Function SplitAndCompressVideo {
     #        > Into the 'Temporary' folder
     write-host "step-3"
 
-    $ActiveFilePath = CompressVideo $ActiveFilePath $Scale $false
+    $ActiveFilePath = (CompressVideo $ActiveFilePath $Scale $false)[-1]
+
+    Write-Host $ActiveFilePath
 
     #    4. Create the Adjusted Folder (If it does not already exist),
     write-host "step-4"
