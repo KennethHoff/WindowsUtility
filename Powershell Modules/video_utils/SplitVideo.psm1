@@ -1,7 +1,10 @@
 $FolderNameForAdjustedVideos = "Adjusted"
 $FolderNameForTemporaryVideos = "Temporary"
 
-$fileExtension = ".mp4"
+$outputFileExtension = ".mp4"
+
+Import-Module video_utils/Utils
+
 
 Function SplitVideo {
     Param(
@@ -24,7 +27,7 @@ Function SplitVideo_Internal
     )
 
     $replacedTimespanString = $Timespan.Replace(":", "-");
-    $replacedFilePathString = $FilePath.Replace(".\", "").Replace("\","").Replace(".mp4", "")
+    $replacedFilePathString = $FilePath.Replace(".\", "").Replace("\","").Replace(".mp4", "").Replace($FolderNameForAdjustedVideos, "").Replace($FolderNameForTemporaryVideos, "")
 
     $OutputFileName = $replacedFilePathString + "_" + $replacedTimespanString
 
@@ -34,17 +37,15 @@ Function SplitVideo_Internal
     {
         $outputFilePath = "$FolderNameForAdjustedVideos\$OutputFileName"
 
-        #        write-host """Split Video"" called Externally"
     }
     else
     {
         $outputFilePath = "$FolderNameForTemporaryVideos\$OutputFileName"
 
-#        write-host """Split Video"" called Internally"
     }
-    mp4box -splitx $Timespan `"$FilePath`" -out $outputFilePath$fileExtension
+    mp4box -splitx $Timespan `"$FilePath`" -out $outputFilePath$outputFileExtension
 
-    $returnValue = "$outputFilePath$fileExtension"
+    $returnValue = "$outputFilePath$outputFileExtension"
 
     return "$returnValue"
 }

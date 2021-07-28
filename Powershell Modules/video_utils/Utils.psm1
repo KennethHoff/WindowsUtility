@@ -62,3 +62,11 @@ Function MoveItemFromTemporaryToAdjusted()
     Move-Item ".\$FolderNameForTemporaryVideos\$inputFileName" ".\$FolderNameForAdjustedVideos\$inputFileName" -force
 
 }
+Function WriteToTerminal()
+{
+    Param(
+        $Text,
+        $Source
+    )
+    Write-host "[$Source]: $Text" -ForegroundColor Blue
+}

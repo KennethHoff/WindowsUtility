@@ -4,6 +4,9 @@ $FolderNameForTemporaryVideos = "Temporary"
 $SuffixForCompressedVideos = "_Compressed"
 $fileExtension = ".mp4"
 
+Import-Module video_utils/Utils
+
+
 Function CompressVideo {
     Param(
         [Parameter(Mandatory, HelpMessage="Enter the File path")]
@@ -22,19 +25,19 @@ Function CompressVideo_Internal {
         $CalledExternally
     )
 
-    write-host "[CompressVideo]: Input File Path: $InputFilePath"
+    WriteToTerminal "Input File Path: $InputFilePath" "CompressVideo"
 
     $ReplacedInputFilePathString = $InputFilePath.Replace(".\", "").Replace(".mp4", "")
 
-    Write-Host "[CompressVideo]: Edited Input File Path: $ReplacedInputFilePathString"
+    WriteToTerminal "Edited Input File Path: $ReplacedInputFilePathString" "CompressVideo"
 
     $OutputFileName = "$ReplacedInputFilePathString$SuffixForCompressedVideos"
 
-    Write-Host "[CompressVideo]: OutputFileName: $OutputFileName"
+    WriteToTerminal "OutputFileName: $OutputFileName" "CompressVideo"
 
     $OutputFileName = $OutputFileName.Replace("$FolderNameForTemporaryVideos\", "");
 
-    Write-Host "[CompressVideo]: Edited OutputFileName: $OutputFileName"
+    WriteToTerminal "Edited OutputFileName: $OutputFileName" "CompressVideo"
 
 
     $OutputFilePath = ""
@@ -45,35 +48,29 @@ Function CompressVideo_Internal {
     else {
         $OutputFilePath = "$FolderNameForTemporaryVideos\$OutputFileName"
     }
-    write-host "[CompressVideo]: OutputFilePath written"
+    WriteToTerminal "OutputFilePath written" "CompressVideo"
 
     $extraOptions
 
     if ($Scale)
     {
-        $OutputFilePath = "$OutputFilePath`_$Scale$fileExtension"
+        $OutputFilePath += "_$Scale"
         $OutputFileName += "_$Scale"
 
         $Scale = "$Scale`:-1"
         $extraOptions = '-vf' + ' "scale=' + "$Scale`""
     }
-    else {
-        $OutputFilePath = "$outputFilePath$fileExtension"
-    }
+    $OutputFilePath += "$fileExtension"
 
 #    $defaultOptions = "-i `"$InputFilePath`" -vcodec libx264 -crf 28 -fs 7000000"
     $defaultOptions = "-i `"$InputFilePath`" -vcodec libx264 -crf 28"
     $outputOptions = "`"$OutputFilePath`""
 
-#    Write-Host "ffmpeg $defaultOptions $outputOptions"
-#    Write-Host
-#    Write-Host
-#    Write-Host
-#    Write-Host
-
     Invoke-Expression -Command "ffmpeg $defaultOptions $extraOptions $outputOptions"
 
     $returnValue = "$OutputFileName$fileExtension"
+
+    WriteToTerminal "Return Value: $returnValue" "CompressVideo"
 
     return ,$returnValue
 }

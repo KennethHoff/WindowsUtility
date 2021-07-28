@@ -1,66 +1,90 @@
+$FolderNameForAdjustedVideos = "Adjusted"
+$FolderNameForTemporaryVideos = "Temporary"
+
 Import-Module video_utils/Utils
 
 Function SplitAndCompressVideo {
 
     Param(
-        [Parameter(Mandatory, HelpMessage="Enter the File path")]
+        [Parameter(Mandatory, HelpMessage="Enter the File path", Position = -1)]
         $InputFilePath,
+        [Parameter(Position = -1)]
         $Timespan,
-        $Scale
+        [Parameter(Position = -1)]
+        [Int] $Scale,
+        [Parameter(Position = -1)]
+        [Int] $AudioTrack = 1
     )
+
+
     #    0. Setup some runtime variables
-    write-host "step-0"
+    WriteToTerminal "step-0: Set up runtime" "SplitAndCompress"
     $ActiveFilePath = ""
 
     #    1. Create Temporary Folders if it does not already exist
-    write-host "step-1"
+    WriteToTerminal "step-1: Create Temporary Folder" "SplitAndCompress"
     CreateTemporaryFolder
 
+    #   2. Make sure the video is a .mp4 file
 
-    #    2. If there was a Timespan supplied, split the video
-    write-host "step-2"
+    WriteToTerminal "step-2: Make sure it is .mp4 file" "SplitAndCompress"
+
+    $inputFileName = (Split-Path -Path $InputFilePath -Leaf).Split(".")[0];
+
+#    $inputFileName = "`"$inputFileName`""
+    $inputFileExtension = (Split-Path -Path $InputFilePath -Leaf).Split(".")[1];
+
+    WriteToTerminal "inputFileName: $inputFileName" "SplitAndCompress"
+    WriteToTerminal "inputFileExtension: $inputFileExtension" "SplitAndCompress"
+
+    switch ($inputFileExtension)
+    {
+        "mp4" {
+            WriteToTerminal "Extension is MP4" "SplitAndCompress"
+            $ActiveFilePath = $InputFilePath
+        }
+        "mkv" {
+            WriteToTerminal "Extension is MKV. Converting to MP4" "SplitAndCompress"
+            $ActiveFilePath = ConvertVideo_MKV_TO_MP4 $InputFilePath $inputFileName $FolderNameForTemporaryVideos $AudioTrack
+        }
+    }
+
+    #    3. If there was a Timespan supplied, split the video
+    WriteToTerminal "step-3: Split video if Timespan supplied" "SplitAndCompress"
 
     if ($Timespan)
     {
+        #    3a. Set the 'ActiveFileName' to the path of the video (without the Temporary/Adjusted folder)
+        WriteToTerminal "step-3a: Split Video" "SplitAndCompress"
 
-        #   2a-1. Split up the video into the parts requested.
-        #           > Into the 'Temporary' folder
-        write-host "step-2a-1"
+        WriteToTerminal "ActiveFilePath: $ActiveFilePath" "SplitAndCompress"
 
-        #        2a-2. Set the 'ActiveFileName' to the path of the video (without the Temporary/Adjusted folder)
-        write-host "step-2a-2"
-
-        $ActiveFilePath = SplitVideo $InputFilePath $Timespan $false
-        #        2a-3. Add the temporary/adjusted folder back in
-        write-host "step-2a-3"
+        $ActiveFilePath = SplitVideo $ActiveFilePath $Timespan $false
     }
-    else
-    {
-        #   2b-1. Set the 'ActiveFileName' to the input name; No changes required
-        write-host "step-2b-1"
-        $ActiveFilePath = $InputFilePath
+    else {
+        #   3b. Do nothing
+        WriteToTerminal "Step-3b: Do not split video" "SplitAndCompress"
     }
 
-    write-host "Video split"
 
-    #    3. Compress the video into h.264 format
+    #    4. Compress the video into h.264 format
     #        > Into the 'Temporary' folder
-    write-host "step-3"
+    WriteToTerminal "step-4: Compress Video" "SplitAndCompress"
 
     $ActiveFilePath = (CompressVideo $ActiveFilePath $Scale $false)[-1]
 
-    Write-Host $ActiveFilePath
+    WriteToTerminal $ActiveFilePath "SplitAndCompress"
 
-    #    4. Create the Adjusted Folder (If it does not already exist),
-    write-host "step-4"
+    #    5. Create the Adjusted Folder (If it does not already exist),
+    WriteToTerminal "step-5: Create 'Adjusted' Folder" "SplitAndCompress"
     CreateAdjustedFolder
 
-    #    5. Move the compressed video from the 'Temporary' folder into the 'Adjusted' folder.
-    write-host "step-5"
+    #    6. Move the compressed video from the 'Temporary' folder into the 'Adjusted' folder.
+    WriteToTerminal "step-6: Move item from Temporary -> Adjusted" "SplitAndCompress"
     MoveItemFromTemporaryToAdjusted $ActiveFilePath
 
-    #    6.Delete the 'Temporary' folder
-    write-host "step-6"
+    #    7.Delete the 'Temporary' folder
+    WriteToTerminal "step-7: Delete 'Temporary' folder" "SplitAndCompress"
     DeleteTemporaryFolder
 }
 
