@@ -16,7 +16,6 @@ Function SplitAndCompressVideo {
         [Int] $AudioTrack = 1
     )
 
-
     #    0. Setup some runtime variables
     WriteToTerminal "step-0: Set up runtime" "SplitAndCompress"
     $ActiveFilePath = ""
@@ -27,27 +26,29 @@ Function SplitAndCompressVideo {
 
     #   2. Make sure the video is a .mp4 file
 
-    WriteToTerminal "step-2: Make sure it is .mp4 file" "SplitAndCompress"
+#    WriteToTerminal "step-2: Make sure it is .mp4 file" "SplitAndCompress"
+#
+#    $inputFileName = (Split-Path -Path $InputFilePath -Leaf).Split(".")[0];
+#
+##    $inputFileName = "`"$inputFileName`""
+#    $inputFileExtension = (Split-Path -Path $InputFilePath -Leaf).Split(".")[1];
+#
+#    WriteToTerminal "inputFileName: $inputFileName" "SplitAndCompress"
+#    WriteToTerminal "inputFileExtension: $inputFileExtension" "SplitAndCompress"
+#
+#    switch ($inputFileExtension)
+#    {
+#        "mp4" {
+#            WriteToTerminal "Extension is MP4" "SplitAndCompress"
+#            $ActiveFilePath = $InputFilePath
+#        }
+#        "mkv" {
+#            WriteToTerminal "Extension is MKV. Converting to MP4" "SplitAndCompress"
+#            $ActiveFilePath = ConvertVideo_MKV_TO_MP4 $InputFilePath $inputFileName $FolderNameForTemporaryVideos $AudioTrack
+#        }
+#    }
 
-    $inputFileName = (Split-Path -Path $InputFilePath -Leaf).Split(".")[0];
-
-#    $inputFileName = "`"$inputFileName`""
-    $inputFileExtension = (Split-Path -Path $InputFilePath -Leaf).Split(".")[1];
-
-    WriteToTerminal "inputFileName: $inputFileName" "SplitAndCompress"
-    WriteToTerminal "inputFileExtension: $inputFileExtension" "SplitAndCompress"
-
-    switch ($inputFileExtension)
-    {
-        "mp4" {
-            WriteToTerminal "Extension is MP4" "SplitAndCompress"
-            $ActiveFilePath = $InputFilePath
-        }
-        "mkv" {
-            WriteToTerminal "Extension is MKV. Converting to MP4" "SplitAndCompress"
-            $ActiveFilePath = ConvertVideo_MKV_TO_MP4 $InputFilePath $inputFileName $FolderNameForTemporaryVideos $AudioTrack
-        }
-    }
+    $ActiveFilePath = ChooseAudioTrack $InputFilePath $AudioTrack $FolderNameForTemporaryVideos
 
     #    3. If there was a Timespan supplied, split the video
     WriteToTerminal "step-3: Split video if Timespan supplied" "SplitAndCompress"
@@ -55,7 +56,7 @@ Function SplitAndCompressVideo {
     if ($Timespan)
     {
         #    3a. Set the 'ActiveFileName' to the path of the video (without the Temporary/Adjusted folder)
-        WriteToTerminal "step-3a: Split Video" "SplitAndCompress"
+        WriteToTerminal "step-3a: Splitting Video" "SplitAndCompress"
 
         WriteToTerminal "ActiveFilePath: $ActiveFilePath" "SplitAndCompress"
 
@@ -63,7 +64,7 @@ Function SplitAndCompressVideo {
     }
     else {
         #   3b. Do nothing
-        WriteToTerminal "Step-3b: Do not split video" "SplitAndCompress"
+        WriteToTerminal "Step-3b: Not splitting video - TimeSpan not supplied" "SplitAndCompress"
     }
 
 

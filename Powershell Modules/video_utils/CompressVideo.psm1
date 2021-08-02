@@ -48,7 +48,6 @@ Function CompressVideo_Internal {
     else {
         $OutputFilePath = "$FolderNameForTemporaryVideos\$OutputFileName"
     }
-    WriteToTerminal "OutputFilePath written" "CompressVideo"
 
     $extraOptions
 
@@ -66,7 +65,11 @@ Function CompressVideo_Internal {
     $defaultOptions = "-i `"$InputFilePath`" -vcodec libx264 -crf 28"
     $outputOptions = "`"$OutputFilePath`""
 
-    Invoke-Expression -Command "ffmpeg $defaultOptions $extraOptions $outputOptions"
+    $finalCommand = "ffmpeg $defaultOptions $extraOptions $outputOptions"
+
+    WriteToTerminal "Invoking '$finalCommand'" "CompressVideo"
+
+    Invoke-Expression -Command $finalCommand
 
     $returnValue = "$OutputFileName$fileExtension"
 

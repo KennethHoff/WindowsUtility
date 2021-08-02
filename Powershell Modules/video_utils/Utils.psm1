@@ -70,3 +70,20 @@ Function WriteToTerminal()
     )
     Write-host "[$Source]: $Text" -ForegroundColor Blue
 }
+
+Function ChooseAudioTrack()
+{
+    Param(
+        $Filepath,
+        $AudioTrack,
+        $Folder
+    )
+    $outputFilePath = $Folder + "\" + $Filepath.Replace(".mp4", "") + "_Track" + $AudioTrack + ".mp4"
+    ffmpeg -i "$FilePath" -map 0:v:0 -map 0:a:$audioTrack -codec copy "$outputFilePath"
+
+    WriteToTerminal "Replacing audio Track of $FilePath with #$AudioTrack - Output file is: [$outputFilePath]" "Utils"
+
+    $returnValue = $outputFilePath
+
+    return $returnValue
+}
