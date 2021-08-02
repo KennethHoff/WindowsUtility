@@ -53,13 +53,17 @@ Function MoveItemFromTemporaryToAdjusted()
         $InputFileName
     )
 
-    $folderExists = Test-Path $FolderNameForAdjustedVideos
+    $inputWithoutTemporaryFolder = $InputFileName.Replace($FolderNameForTemporaryVideos, "").Replace(".\", "")
 
-    if (!$folderExists)
-    {
-        New-Item $FolderNameForAdjustedVideos -ItemType Directory | Out-Null
-    }
-    Move-Item ".\$FolderNameForTemporaryVideos\$inputFileName" ".\$FolderNameForAdjustedVideos\$inputFileName" -force
+    $finalInputPath = ".\$FolderNameForTemporaryVideos\$inputWithoutTemporaryFolder"
+    $finalOutputPath = ".\$FolderNameForAdjustedVideos\$inputWithoutTemporaryFolder"
+
+    WriteToTerminal "'Final Input Path': $finalInputPath" "MoveItemFromTemporaryToAdjusted"
+    WriteToTerminal "'Final Output Path': $finalOutputPath" "MoveItemFromTemporaryToAdjusted"
+
+    $finalOutputPath =
+
+    Move-Item $finalInputPath $finalOutputPath -force
 
 }
 Function WriteToTerminal()
